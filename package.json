@@ -20,5 +20,15 @@
   "bugs": {
     "url": "https://github.com/tleen/dbcsv/issues"
   },
-  "homepage": "https://github.com/tleen/dbcsv"
+  "homepage": "https://github.com/tleen/dbcsv",
+  "devDependencies" : {
+    "grunt" : "0.4.5",
+    "grunt-cafe-mocha" : "0.1.13",
+    "grunt-contrib-jshint" : "0.10.0"
+  },
+  "dependencies" : {
+    "csv2array" : "0.0.4",
+    "lodash" : "2.4.1",
+    "log" : "1.4.0"
+  }
 }
