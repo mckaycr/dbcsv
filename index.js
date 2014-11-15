@@ -12,27 +12,22 @@ module.exports = function(){
   if(arguments.length === 0) throw new Error('cannot call without arguments');
 
   // -- Configuration --
-  var config;
-  if(_.isString(arguments[0])) config = {filename : arguments[0]};
-  else if(_.isObject(arguments[0])) config = arguments[0];
+  var c;
+  if(_.isString(arguments[0])) c = {source : arguments[0]};
+  else if(_.isObject(arguments[0])) c = arguments[0];
 
-  if(_.isUndefined(config)) throw new Error('filename string or configuration object required');
+  if(_.isUndefined(c)) throw new Error('filename string or configuration object required');
 
-  var configuration = _.defaults({}, config, {
+  c = _.defaults(c, {
     encoding : 'utf8',
     headers : true
   });
-  if(!configuration.filename) throw new Error('filename required');
+  if(!c.source) throw new Error('filename required');
   
-  // Get CSV File
-  if(!fs.existsSync(configuration.filename)) throw new Error('Cannot find file: ' + configuration.filename);
+  // -- Get Data --
+  if(!fs.existsSync(c.source)) throw new Error('Cannot find file: ' + c.source);
+  var data = csv2array(fs.readFileSync(c.source, {encoding : c.encoding}));  
 
-  var data = csv2array(
-    fs.readFileSync(configuration.filename, {encoding : configuration.encoding}),
-    {
-      headers : configuration.headers
-    });
-  
   return {
     size : _.size(data),
     version : pkg.version

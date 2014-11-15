@@ -40,7 +40,7 @@ describe('creation filename', function(){
     }).should.throw(/missingfilename/);
 
     (function(){ 
-      dbcsv({filename : './missingfilename.csv'}); 
+      dbcsv({source : './missingfilename.csv'}); 
     }).should.throw(/missingfilename/);
   });
 
