@@ -1,5 +1,6 @@
 'use strict';
 
+// xx - better csv parsing options
 // read only for now (till I have a need to write)
 
 var csv2array = require('csv2array'),
@@ -7,29 +8,48 @@ fs = require('fs'),
 pkg = require('./package.json'),
 _ = require('lodash');
 
-module.exports = function(){
+module.exports = function(source, configuration){
 
-  if(arguments.length === 0) throw new Error('cannot call without arguments');
 
   // -- Configuration --
-  var c;
-  if(_.isString(arguments[0])) c = {source : arguments[0]};
-  else if(_.isObject(arguments[0])) c = arguments[0];
+  if(!_.isString(source)) throw new Error('source filename required');
 
-  if(_.isUndefined(c)) throw new Error('filename string or configuration object required');
-
-  c = _.defaults(c, {
+  var c = _.defaults({source : source}, configuration, {
     encoding : 'utf8',
-    headers : true
+    headers : true,
+    trim : true,
+    headersLower : true
   });
-  if(!c.source) throw new Error('filename required');
-  
+
   // -- Get Data --
   if(!fs.existsSync(c.source)) throw new Error('Cannot find file: ' + c.source);
-  var data = csv2array(fs.readFileSync(c.source, {encoding : c.encoding}));  
+  var data = csv2array(
+    fs.readFileSync(c.source, {encoding : c.encoding}),
+    {});  
+
+  // associate data by column index (and header if headers)
+  var headers;
+  if(c.headers){
+    headers = data.shift();
+    if(c.trim) headers = _.invoke(headers, 'trim');
+    if(c.headersLower) headers = _.invoke(headers, 'toLowerCase');
+  }
+  
+  var numColumns = _.max(data, 'length').length;
+  var numRows = _.size(data);
+  
+  var columnRange = _.range(numColumns);
+  data = _.map(data, function(d){
+    if(c.trim) d = _.invoke(d, 'trim');
+    var byHeader = (headers ? _.zipObject(headers, d) : {});
+    var byIndex = _.zipObject(columnRange,d);
+    return _.merge(byHeader, byIndex);
+  });
 
   return {
-    size : _.size(data),
+    headers : _.clone((headers ? headers : columnRange)),
+    numColumns : numColumns,
+    size : numRows,
     version : pkg.version
   };
 
