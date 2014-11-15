@@ -88,3 +88,11 @@ describe('configuration options', function(){
   // xx -- test trim config option in data too
 
 });
+
+describe('column()', function(){
+  var db = dbcsv(filename);
+  it('should return entire column', function(){
+    db.column('id').should.eql(['1','2','3']);
+    db.column(0).should.eql(['1','2','3']);
+  });
+});

@@ -50,7 +50,10 @@ module.exports = function(source, configuration){
     headers : _.clone((headers ? headers : columnRange)),
     numColumns : numColumns,
     size : numRows,
-    version : pkg.version
+    version : pkg.version,
+    column : function(key){
+      return _.pluck(data, key);
+    }
   };
 
 
