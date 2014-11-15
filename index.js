@@ -32,7 +32,6 @@ module.exports = function(){
     {
       headers : configuration.headers
     });
-  console.log(data);
   
   return {
     size : _.size(data),
