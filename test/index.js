@@ -96,3 +96,24 @@ describe('column()', function(){
     db.column(0).should.eql(['1','2','3']);
   });
 });
+
+describe('row()', function(){
+  it('should return single row indexed by header', function(){
+    var db = dbcsv(filename);
+    db.row(0).should.eql({
+      'id' : '1', 
+      'threshold' : '5.0',
+      'description' : 'This is the first row of data'
+    });
+  });
+
+  it('should return single row indexed by columns', function(){
+    var db = dbcsv(filename, {headers : false});
+    db.row(1).should.eql({
+      0 : '1', 
+      1 : '5.0',
+      2 : 'This is the first row of data'
+    });
+  });
+
+});

@@ -2,6 +2,8 @@
 
 // xx - better csv parsing options
 // read only for now (till I have a need to write)
+// xx - note in docs everything is treated as a string
+// xx - seperate "has headers" from "use headers" in config
 
 var csv2array = require('csv2array'),
 fs = require('fs'),
@@ -33,6 +35,8 @@ module.exports = function(source, configuration){
     headers = data.shift();
     if(c.trim) headers = _.invoke(headers, 'trim');
     if(c.headersLower) headers = _.invoke(headers, 'toLowerCase');
+
+    // xx - if headers < max columns, pad headers?
   }
   
   var numColumns = _.max(data, 'length').length;
@@ -46,6 +50,11 @@ module.exports = function(source, configuration){
     return _.merge(byHeader, byIndex);
   });
 
+  // remove double indexing from rows
+  function isolate(row){
+    return _.pick(row, (headers ? headers : columnRange)); 
+  }
+
   return {
     headers : _.clone((headers ? headers : columnRange)),
     numColumns : numColumns,
@@ -53,6 +62,9 @@ module.exports = function(source, configuration){
     version : pkg.version,
     column : function(key){
       return _.pluck(data, key);
+    },
+    row : function(index){
+      return isolate(data[index]);
     }
   };
 
