@@ -10,6 +10,8 @@ pkg = require('../package.json');
 var filename = path.resolve(__dirname, './sample.csv');
 var sampleRowCount = 5;
 
+var filenameQuotes = path.resolve(__dirname, './sample-quotes.csv');
+
 describe('creation signatures', function(){
 
   var err = 'source filename required';
@@ -150,4 +152,18 @@ describe('search()', function(){
     }]);
   });
 
+});
+
+describe('quoted file', function(){
+  it('should load a file with quotes', function(){
+    dbcsv(filenameQuotes).size.should.equal(sampleRowCount-1);
+  });
+  it('should strip quotes', function(){
+    dbcsv(filenameQuotes).row(3).should.eql({
+      id : '4',
+      'some number' : '1000',
+      money : '$4.00',
+      'a long string' : 'Duis autem vel.'
+    });
+  });
 });

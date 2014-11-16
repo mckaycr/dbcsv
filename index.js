@@ -5,7 +5,7 @@
 // xx - note in docs everything is treated as a string
 // xx - seperate "has headers" from "use headers" in config
 // xx - there will be a conflict for headers if headers have numeric index 
-// xx -- better searching
+// xx -- better searching (allow a matching function?)
 
 var csv2array = require('csv2array'),
 fs = require('fs'),
