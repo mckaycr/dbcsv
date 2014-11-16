@@ -29,7 +29,6 @@
   },
   "dependencies" : {
     "csv2array" : "0.0.4",
-    "lodash" : "2.4.1",
-    "log" : "1.4.0"
+    "lodash" : "2.4.1"
   }
 }
