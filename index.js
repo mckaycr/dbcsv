@@ -73,6 +73,7 @@ module.exports = function(source, configuration){
       return isolate(data[index]);
     },
     search : function(query){
+      if(_.isFunction(query)) return _.chain(data).filter(query).map(isolate).valueOf();
       return _.chain(data).where(query).map(isolate).valueOf();
     }
   };

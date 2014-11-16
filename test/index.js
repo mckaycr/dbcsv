@@ -3,9 +3,12 @@
 /* global describe, it, should */
 /* jshint expr: true */
 
+// xx -- more tests for out of bounds and empty data sets
+
 var dbcsv = require('../'),
 path = require('path'),
-pkg = require('../package.json');
+pkg = require('../package.json'),
+_ = require('lodash');
 
 var filename = path.resolve(__dirname, './sample.csv');
 var sampleRowCount = 5;
@@ -121,37 +124,51 @@ describe('row()', function(){
 });
 
 describe('search()', function(){
-  it('should return matching rows indexed by header', function(){
-    var db = dbcsv(filename);
-    db.search({'id' : '1'}).should.eql([{
-      'id' : '1', 
-      'threshold' : '5.0',
-      'description' : 'This is the first row of data'
-    }]);
+  describe('with object', function(){
+    it('should return matching rows indexed by header', function(){
+      var db = dbcsv(filename);
+      db.search({'id' : '1'}).should.eql([{
+	'id' : '1', 
+	'threshold' : '5.0',
+	'description' : 'This is the first row of data'
+      }]);
+    });
+    
+    it('should return matching rows indexed by column', function(){
+      var db = dbcsv(filename);
+      db.search({'id' : '1'}).should.eql([{
+	'id' : '1', 
+	'threshold' : '5.0',
+	'description' : 'This is the first row of data'
+      }]);
   });
 
-  it('should return matching rows indexed by column', function(){
-    var db = dbcsv(filename);
-    db.search({'id' : '1'}).should.eql([{
-      'id' : '1', 
-      'threshold' : '5.0',
-      'description' : 'This is the first row of data'
-    }]);
+    it('should return multiple matching rows indexed by column', function(){
+      var db = dbcsv(filename);
+      db.search({'threshold' : '3.0'}).should.eql([{
+	'id' : '2', 
+	'threshold' : '3.0',
+	'description' : 'This is the second row of data'
+      },{
+	'id' : '4', 
+	'threshold' : '3.0',
+	'description' : 'This is the fourth row of data'
+      }]);
+    });
   });
 
-  it('should return multiple matching rows indexed by column', function(){
+  describe('with function', function(){
     var db = dbcsv(filename);
-    db.search({'threshold' : '3.0'}).should.eql([{
-      'id' : '2', 
-      'threshold' : '3.0',
-      'description' : 'This is the second row of data'
-    },{
-      'id' : '4', 
-      'threshold' : '3.0',
-      'description' : 'This is the fourth row of data'
-    }]);
+    it('should return all data', function(){
+      db.search(_.constant(true)).length.should.eql(sampleRowCount-1);
+    });
+    it('should return no data', function(){
+      db.search(_.constant(false)).should.eql([]);
+    });
+    it('should return select data', function(){
+      db.search(function(row){ return row.threshold == '3.0'; }).length.should.eql(2);
+    });
   });
-
 });
 
 describe('quoted file', function(){

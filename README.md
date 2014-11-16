@@ -31,7 +31,7 @@ The options object may contain:
 
 - **.column(key)** return an array of all the data in a column, key is the column index (leftmost starting from 0), key may also be header value if headers are active.
 - **.row(index)** return single row array at numeric index starting at 0, if headers are enabled first data row is index 0.
-- **.search(query)** returns a two dimensional array of all rows exactly matching properties represented in the query object.
+- **.search(query)** returns a two dimensional array of all rows exactly matching properties represented in the query object, if query is a function return all rows where function returns truthy.
 
 ### Example
 
@@ -103,5 +103,4 @@ console.log(db.search({threshold : '3.0'}));
 * read only for now - the need to write out is not present yet
 * seperate "has headers" from "use headers" in configuration
 * there will be a conflict for headers if headers have numeric index 
-* better searching (perhaps allow search on a custom function)
 
