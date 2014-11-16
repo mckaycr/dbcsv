@@ -4,7 +4,7 @@
   "description": "A simple csv file(s) backed database.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "./node_modules/grunt-cafe-mocha/node_modules/mocha/bin/mocha --ui bdd --reporter spec --require should test/index.js"
   },
   "repository": {
     "type": "git",
