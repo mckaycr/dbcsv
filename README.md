@@ -13,13 +13,13 @@ var db = require('dbcsv')(<csv source filename>, [options]);
 
 ### Example
 
-see: [/examples/basic.js](examples/basic.js)
+[/examples/basic.js](examples/basic.js) applied to source file [../test/sample.csv](test/sample.csv).
 
 ```javascript
 var dbcsv = require('..'),
 path = require('path');
 
-var source = path.resolve(__dirname, '[../test/sample.csv](test/sample.csv)');
+var source = path.resolve(__dirname, './test/sample.csv');
 
 var db = dbcsv(source);
 
