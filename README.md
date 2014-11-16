@@ -7,15 +7,29 @@ A simple database sourced from csv file(s). An alternative to [csvdb](https://ww
 ### Use
 
 ```javascript
-var db = require('dbcsv')(<csv source filename>, [options]);
+var db = require('dbcsv')(<csv source filename>, [options object]);
 ```
 
-where the options may be :
+#### Options
+The options object may contain:
 
-- **encoding** string, encoding value of the CSV source, defaults to '*utf8*'
+- **encoding** string, encoding value of the CSV source, defaults to '*utf8*'.
 - **headers** boolean, treat the first line as column headers, defaults to *true*. With this enabled you may alias columns with their header names in search() and column(), likewise results are returned as key, value pairs with the header value as the key. When disabled the column numerical index is used as the key. Column index may always be used in search() and column().
 - **trim** boolean, remove whitespace from entries, defaults to *true*.
 - **headersLower** boolean, transform header names to lowercase, defaults to *true*, only useful if **headers** is enabled.
+
+#### Properties
+
+- **.headers** array of column header values, will be numeric values if headers are disabled.
+- **.numColumns** the number of columns in the database.
+- **.size** the number of rows in the database (excluding the header row if headers are active).
+- **.version** the package version of this module
+
+#### Methods
+
+- **.column(key)** return an array of all the data in a column, key is the column index (leftmost starting from 0), key may also be header value if headers are active.
+- **.row(index)** return single row array at numeric index starting at 0, if headers are enabled first data row is index 0.
+- **.search(query)** returns a two dimensional array of all rows exactly matching properties represented in the query object.
 
 ### Example
 
