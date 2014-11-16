@@ -10,6 +10,12 @@ A simple database sourced from csv file(s). An alternative to [csvdb](https://ww
 var db = require('dbcsv')(<csv source filename>, [options]);
 ```
 
+where the options may be :
+
+- **encoding** string, encoding value of the CSV source, defaults to '*utf8*'
+- **headers** boolean, treat the first line as column headers, defaults to *true*. With this enabled you may alias columns with their header names in search() and column(), likewise results are returned as key, value pairs with the header value as the key. When disabled the column numerical index is used as the key. Column index may always be used in search() and column().
+- **trim** boolean, remove whitespace from entries, defaults to *true*.
+- **headersLower** boolean, transform header names to lowercase, defaults to *true*, only useful if **headers** is enabled.
 
 ### Example
 
