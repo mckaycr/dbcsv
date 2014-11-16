@@ -1,6 +1,6 @@
 {
   "name": "dbcsv",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A simple csv file(s) backed database.",
   "main": "index.js",
   "scripts": {
