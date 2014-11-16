@@ -4,6 +4,8 @@
 // read only for now (till I have a need to write)
 // xx - note in docs everything is treated as a string
 // xx - seperate "has headers" from "use headers" in config
+// xx - there will be a conflict for headers if headers have numeric index 
+// xx -- better searching
 
 var csv2array = require('csv2array'),
 fs = require('fs'),
@@ -65,6 +67,9 @@ module.exports = function(source, configuration){
     },
     row : function(index){
       return isolate(data[index]);
+    },
+    search : function(query){
+      return _.chain(data).where(query).map(isolate).valueOf();
     }
   };
 

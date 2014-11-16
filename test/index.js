@@ -8,6 +8,7 @@ path = require('path'),
 pkg = require('../package.json');
 
 var filename = path.resolve(__dirname, './sample.csv');
+var sampleRowCount = 5;
 
 describe('creation signatures', function(){
 
@@ -46,7 +47,7 @@ describe('version()', function(){
 
 describe('size()', function(){
   it('sample data size', function(){
-    dbcsv(filename).size.should.eql(3);
+    dbcsv(filename).size.should.eql(sampleRowCount-1);
   });
 });
 
@@ -54,12 +55,12 @@ describe('configuration options', function(){
   describe('headers', function(){
     it('should remove headers by default', function(){
       var db = dbcsv(filename);
-      db.size.should.eql(3);
+      db.size.should.eql(sampleRowCount-1);
       db.headers.should.eql(['id','threshold','description']);
     });
     it('should not remove headers if {headers : false}', function(){
       var db = dbcsv(filename, {headers : false});
-      db.size.should.eql(4);
+      db.size.should.eql(sampleRowCount);
       db.headers.should.eql([0,1,2]);
     });
   });
@@ -92,8 +93,8 @@ describe('configuration options', function(){
 describe('column()', function(){
   var db = dbcsv(filename);
   it('should return entire column', function(){
-    db.column('id').should.eql(['1','2','3']);
-    db.column(0).should.eql(['1','2','3']);
+    db.column('id').should.eql(['1','2','3','4']);
+    db.column(0).should.eql(['1','2','3','4']);
   });
 });
 
@@ -114,6 +115,39 @@ describe('row()', function(){
       1 : '5.0',
       2 : 'This is the first row of data'
     });
+  });
+});
+
+describe('search()', function(){
+  it('should return matching rows indexed by header', function(){
+    var db = dbcsv(filename);
+    db.search({'id' : '1'}).should.eql([{
+      'id' : '1', 
+      'threshold' : '5.0',
+      'description' : 'This is the first row of data'
+    }]);
+  });
+
+  it('should return matching rows indexed by column', function(){
+    var db = dbcsv(filename);
+    db.search({'id' : '1'}).should.eql([{
+      'id' : '1', 
+      'threshold' : '5.0',
+      'description' : 'This is the first row of data'
+    }]);
+  });
+
+  it('should return multiple matching rows indexed by column', function(){
+    var db = dbcsv(filename);
+    db.search({'threshold' : '3.0'}).should.eql([{
+      'id' : '2', 
+      'threshold' : '3.0',
+      'description' : 'This is the second row of data'
+    },{
+      'id' : '4', 
+      'threshold' : '3.0',
+      'description' : 'This is the fourth row of data'
+    }]);
   });
 
 });
