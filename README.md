@@ -1,6 +1,8 @@
 dbcsv
 =====
 
+[![Build Status](https://travis-ci.org/tleen/cvsdb.png?branch=master)](https://travis-ci.org/tleen/cvsdb)
+
 A simple database sourced from csv file(s). An alternative to [csvdb](https://www.npmjs.org/package/csvdb) which is actually really great and where you should be looking for this sort of functionality first. I needed something a little simpler and more specific for a project. Due to the nature of CSV files everything in dbcsv is treated as a string, even the numbers.
 
 
