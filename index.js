@@ -1,12 +1,5 @@
 'use strict';
 
-// xx - better csv parsing options
-// read only for now (till I have a need to write)
-// xx - note in docs everything is treated as a string
-// xx - seperate "has headers" from "use headers" in config
-// xx - there will be a conflict for headers if headers have numeric index 
-// xx -- better searching (allow a matching function?)
-
 var csv2array = require('csv2array'),
 fs = require('fs'),
 pkg = require('./package.json'),
@@ -27,11 +20,14 @@ module.exports = function(source, configuration){
 
   // -- Get Data --
   if(!fs.existsSync(c.source)) throw new Error('Cannot find file: ' + c.source);
+
+  // we read the file contents and csv2array does the actual parsing-to-array work
   var data = csv2array(
     fs.readFileSync(c.source, {encoding : c.encoding}),
     {});  
 
-  // associate data by column index (and header if headers)
+  // -- Deal With Headers --
+
   var headers;
   if(c.headers){
     headers = data.shift();
@@ -40,10 +36,14 @@ module.exports = function(source, configuration){
 
     // xx - if headers < max columns, pad headers?
   }
+  // if headers are undefined after this we know headers are not in use
   
+  // now that headers are gone we can establish db dimensions, use the longest row to establish 
+  // number of columns
   var numColumns = _.max(data, 'length').length;
   var numRows = _.size(data);
   
+  // create data object as multiple indexed object both columns and headers if enabled
   var columnRange = _.range(numColumns);
   data = _.map(data, function(d){
     if(c.trim) d = _.invoke(d, 'trim');
@@ -52,16 +52,20 @@ module.exports = function(source, configuration){
     return _.merge(byHeader, byIndex);
   });
 
-  // remove double indexing from rows
+  // this function undoes the multiple indexing of the data objects, and returns it single indexed
+  // object, choice of keys depends on headers being enabled or not
+  // this is used to fix the data representation before returning data
   function isolate(row){
     return _.pick(row, (headers ? headers : columnRange)); 
   }
 
   return {
+// properties of db
     headers : _.clone((headers ? headers : columnRange)),
     numColumns : numColumns,
     size : numRows,
     version : pkg.version,
+// methods of db
     column : function(key){
       return _.pluck(data, key);
     },
@@ -72,6 +76,4 @@ module.exports = function(source, configuration){
       return _.chain(data).where(query).map(isolate).valueOf();
     }
   };
-
-
 };
