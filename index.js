@@ -15,8 +15,7 @@ module.exports = function(source, configuration){
     encoding : 'utf8',
     headers : true,
     trim : true,
-    headersLower : true,
-    separator: ','
+    headersLower : true
   });
 
   // -- Get Data --
@@ -25,7 +24,7 @@ module.exports = function(source, configuration){
   // we read the file contents and csv2array does the actual parsing-to-array work
   var data = csv2array(
     fs.readFileSync(c.source, {encoding : c.encoding}),
-    {separator:c.separator});  
+    {});  
 
   // -- Deal With Headers --
 
